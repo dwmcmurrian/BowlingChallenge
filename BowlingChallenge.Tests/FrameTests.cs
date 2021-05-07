@@ -112,7 +112,7 @@ namespace BowlingChallengeTests
         }
 
         [Test]
-        public void GetFrameTotal_RollSumGreateThan10_ShouldThrowInvalidFrameException()
+        public void GetFrameTotal_RollSumGreaterThan10_ShouldThrowInvalidFrameException()
 
         {
             var firstRoll = 2;
