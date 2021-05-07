@@ -24,8 +24,6 @@
             {
                 ExtaRoll = true;
 
-                if (Rolls.Length != 3) throw new InvalidFrameException();
-               
             }else if (Rolls.Length == 3)
             {
                 throw new InvalidFrameException();
