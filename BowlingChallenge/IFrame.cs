@@ -4,10 +4,11 @@ using System.Text;
 
 namespace BowlingChallenge
 {
-    interface IFrame
+    public interface IFrame
     {
+        public int FrameTotal { get; }
+
         public void SaveRolls(int[] rolls);
-        public int GetFrameTotal();
         public void UpdateFrameTotal(int frameTotal);
     }
 }

@@ -20,6 +20,7 @@ namespace BowlingChallengeTests
         }
 
         #region StandardFrame Tests
+       
         [Test]
         public void SaveRolls_ValidStandardRolls_ShouldSetRollsToMatch()
         {
@@ -70,58 +71,54 @@ namespace BowlingChallengeTests
             var expectedSum = firstRoll + secondRoll;
 
             var rolls = new int[] { firstRoll, secondRoll };
-            _standardFrame.SaveRolls(rolls);
 
             //act
-            var total = _standardFrame.GetFrameTotal();
+            _standardFrame.SaveRolls(rolls);
 
             //assert
-            Assert.AreEqual(expectedSum, total);
+            Assert.AreEqual(expectedSum, _standardFrame.FrameTotal);
         }
 
         [Test]
-        public void GetFrameTotal_RollSumOf10_ShouldReturnSpare()
+        public void SaveRolls_RollSumOf10_ShouldReturnSpare()
         {
             //arrange
             var firstRoll = 1;
             var secondRoll = 9;
             var rolls = new int[] { firstRoll, secondRoll };
-            _standardFrame.SaveRolls(rolls);
 
             //act
-            var total = _standardFrame.GetFrameTotal();
+            _standardFrame.SaveRolls(rolls);
 
             //assert
-            Assert.AreEqual(total, (int)BowlingMarks.Spare);
+            Assert.AreEqual(_standardFrame.FrameTotal, (int)BowlingMarks.Spare);
         }
 
         [Test]
-        public void GetFrameTotal_FirstRollEqualTo10_ShouldReturnStrike()
+        public void SaveRolls_FirstRollEqualTo10_ShouldReturnStrike()
 
         {
             var firstRoll = 10;
             var secondRoll = 0;
             var rolls = new int[] { firstRoll, secondRoll };
-            _standardFrame.SaveRolls(rolls);
 
             //act
-            var total = _standardFrame.GetFrameTotal();
+            _standardFrame.SaveRolls(rolls); ;
 
             //assert
-            Assert.AreEqual(total, (int)BowlingMarks.Strike);
+            Assert.AreEqual(_standardFrame.FrameTotal, (int)BowlingMarks.Strike);
         }
 
         [Test]
-        public void GetFrameTotal_RollSumGreaterThan10_ShouldThrowInvalidFrameException()
+        public void SaveRolls_RollSumGreaterThan10_ShouldThrowInvalidFrameException()
 
         {
             var firstRoll = 2;
             var secondRoll = 9;
             var rolls = new int[] { firstRoll, secondRoll };
-            _standardFrame.SaveRolls(rolls);
 
             //assert
-            Assert.Throws<InvalidFrameException>(() => _standardFrame.GetFrameTotal());
+            Assert.Throws<InvalidFrameException>(() => _standardFrame.SaveRolls(rolls));
 
         }
 
@@ -197,15 +194,14 @@ namespace BowlingChallengeTests
             var thirdRoll = 2;
             var expectedSum = firstRoll + secondRoll + thirdRoll;
             var rolls = new int[] { firstRoll, secondRoll, thirdRoll };
-            _finalFrame.SaveRolls(rolls);
 
             //act
-            var total = _finalFrame.GetFrameTotal();
+            _finalFrame.SaveRolls(rolls);
 
             //assert
-            Assert.AreEqual(expectedSum, total);
+            Assert.AreEqual(expectedSum, _finalFrame.FrameTotal);
         }
-
+         
         [Test]
         public void GetFrameTotal_FinalFrameSpareRolledInFirstTwoFrames_ShouldReturnSumOfThreeRolls()
         {
@@ -213,38 +209,34 @@ namespace BowlingChallengeTests
             var firstRoll = 2;
             var secondRoll = 8;
             var thirdRoll = 2;
-
             var expectedSum = firstRoll + secondRoll + thirdRoll;
             var rolls = new int[] { firstRoll, secondRoll, thirdRoll };
-            _finalFrame.SaveRolls(rolls);
 
             //act
-            var total = _finalFrame.GetFrameTotal();
+            _finalFrame.SaveRolls(rolls);
 
             //assert
-            Assert.AreEqual(expectedSum, total);
+            Assert.AreEqual(expectedSum, _finalFrame.FrameTotal);
         }
 
         [Test]
-        public void GetFrameTotal_FinalFrameNonMarkingFirstTwoRows_ShouldReturnSumOfTwoRolls()
+        public void SaveRolls_FinalFrameNonMarkingFirstTwoRows_ShouldReturnSumOfTwoRolls()
         {
             // arrange
             var firstRoll = 2;
             var secondRoll = 6;
-
             var expectedSum = firstRoll + secondRoll;
             var rolls = new int[] { firstRoll, secondRoll };
-            _finalFrame.SaveRolls(rolls);
 
             //act
-            var total = _finalFrame.GetFrameTotal();
+            _finalFrame.SaveRolls(rolls);
 
             //assert
-            Assert.AreEqual(expectedSum, total);
+            Assert.AreEqual(expectedSum, _finalFrame.FrameTotal);
         }
 
         [Test]
-        public void GetFrameTotal_InvalidThirdRoll_ShouldThrowInvalidFrameException()
+        public void SaveRolls_InvalidThirdRoll_ShouldThrowInvalidFrameException()
         {
             // arrange
             var firstRoll = 2;
@@ -252,10 +244,9 @@ namespace BowlingChallengeTests
             var thirdRoll = 2;
 
             var rolls = new int[] { firstRoll, secondRoll, thirdRoll };
-            _finalFrame.SaveRolls(rolls);
 
             //assert
-            Assert.Throws<InvalidFrameException>(() => _finalFrame.GetFrameTotal());
+            Assert.Throws<InvalidFrameException>(() => _finalFrame.SaveRolls(rolls));
 
         }
 

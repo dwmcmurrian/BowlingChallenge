@@ -14,10 +14,10 @@
             if (numberOfRoles == 0 || numberOfRoles > 3) throw new InvalidFrameException();
 
             Rolls = rolls;
-
+            SetFrameTotal();
         }
 
-        public int GetFrameTotal()
+        private void SetFrameTotal()
         {
          
             var sum = 0;
@@ -34,7 +34,8 @@
             {
                 sum += roll;
             }
-            return sum;
+            
+            FrameTotal = sum;
         }
 
         public void UpdateFrameTotal(int frameTotal)
