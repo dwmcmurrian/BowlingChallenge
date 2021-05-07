@@ -32,8 +32,8 @@ namespace BowlingChallengeTests
             _standardFrame.SaveRolls(rolls);
 
             //assert
-            Assert.AreEqual(firstRoll, _standardFrame.FirstRoll);
-            Assert.AreEqual(secondRoll, _standardFrame.SecondRoll);
+            Assert.AreEqual(firstRoll, _standardFrame.Rolls[0]);
+            Assert.AreEqual(secondRoll, _standardFrame.Rolls[1]);
         }
 
         [Test]
@@ -142,9 +142,9 @@ namespace BowlingChallengeTests
             _finalFrame.SaveRolls(rolls);
 
             //assert
-            Assert.AreEqual(firstRoll, _finalFrame.FirstRoll);
-            Assert.AreEqual(secondRoll, _finalFrame.SecondRoll);
-            Assert.AreEqual(thirdRoll, _finalFrame.ThirdRoll);
+            Assert.AreEqual(firstRoll, _finalFrame.Rolls[0]);
+            Assert.AreEqual(secondRoll, _finalFrame.Rolls[1]);
+            Assert.AreEqual(thirdRoll, _finalFrame.Rolls[2]);
 
         }
 
