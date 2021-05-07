@@ -5,6 +5,7 @@
 
         public int[] Rolls { get; private set; }
         public bool ExtaRoll { get; private set; }
+        public int FrameTotal { get; private set; }
 
         public void SaveRolls(int[] rolls)
         {
@@ -34,6 +35,11 @@
                 sum += roll;
             }
             return sum;
+        }
+
+        public void UpdateFrameTotal(int frameTotal)
+        {
+            FrameTotal = frameTotal;
         }
     }
 }

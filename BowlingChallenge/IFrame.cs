@@ -8,5 +8,6 @@ namespace BowlingChallenge
     {
         public void SaveRolls(int[] rolls);
         public int GetFrameTotal();
+        public void UpdateFrameTotal(int frameTotal);
     }
 }

@@ -125,11 +125,24 @@ namespace BowlingChallengeTests
 
         }
 
+        [Test]
+        public void UpdateFrameTotal_ValidStandardTotal_ShouldUpdateFrameTotal()
+
+        {
+            //arrange
+            var newFrameValue = 5;
+
+            //act
+            _standardFrame.UpdateFrameTotal(newFrameValue);
+
+            //assert
+            Assert.AreEqual(newFrameValue, _standardFrame.FrameTotal);
+        }
         #endregion
 
         #region FinalFrame Tests
 
-        [Test]
+                [Test]
         public void SaveRolls_ValidNumberOfFinalRolls_ShouldSaveMathcingValues()
         {
             //arrange
@@ -246,7 +259,19 @@ namespace BowlingChallengeTests
 
         }
 
+        [Test]
+        public void UpdateFrameTotal_ValidFinalTotal_ShouldUpdateFrameTotal()
 
+        {
+            //arrange
+            var newFrameValue = 5;
+
+            //act
+            _standardFrame.UpdateFrameTotal(newFrameValue);
+
+            //assert
+            Assert.AreEqual(newFrameValue, _standardFrame.FrameTotal);
+        }
 
 
 

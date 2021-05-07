@@ -7,8 +7,8 @@ namespace BowlingChallenge
     public class StandardFrame : IFrame
     {
         public int[] Rolls { get; private set; }
-        public int FirstRoll { get; private set; }
-        public int SecondRoll { get; private set; }
+        public int FrameTotal { get; private set; }
+
 
         public void SaveRolls(int[] rolls)
         {
@@ -23,14 +23,21 @@ namespace BowlingChallenge
 
             if (Rolls[0] == (int)BowlingMarks.Strike)
             {
-                return (int)BowlingMarks.Strike;
+                FrameTotal = (int)BowlingMarks.Strike;
+                return FrameTotal;
             }
             else if (sum <= (int)BowlingMarks.Strike)
             {
-                return (sum + 1) == (int)BowlingMarks.Spare ? (int)BowlingMarks.Spare : sum;
+                FrameTotal = (sum + 1) == (int)BowlingMarks.Spare ? (int)BowlingMarks.Spare : sum;
+                return FrameTotal;
             }
 
             throw new InvalidFrameException();
+        }
+
+        public void UpdateFrameTotal(int frameTotal)
+        {
+               FrameTotal = frameTotal;
         }
     }
 }
