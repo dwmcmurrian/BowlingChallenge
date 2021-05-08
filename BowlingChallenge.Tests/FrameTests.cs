@@ -1,22 +1,18 @@
 using BowlingChallenge;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BowlingChallengeTests
 {
     public class FrameTests
     {
-        //may use auto fixture///
-        private StandardFrame _standardFrame;
         private FinalFrame _finalFrame;
+        private StandardFrame _standardFrame;
 
         [SetUp]
         public void Setup()
         {
             _standardFrame = new StandardFrame();
             _finalFrame = new FinalFrame();
-
         }
 
         #region StandardFrame Tests
@@ -27,7 +23,7 @@ namespace BowlingChallengeTests
             //arrange
             var firstRoll = 0;
             var secondRoll = 9;
-            var rolls = new int[] { firstRoll, secondRoll };
+            var rolls = new[] {firstRoll, secondRoll};
 
             //act
             _standardFrame.SaveRolls(rolls);
@@ -44,11 +40,10 @@ namespace BowlingChallengeTests
             var firstRoll = 0;
             var secondRoll = 9;
             var thirdRoll = 3;
-            var rolls = new int[] { firstRoll, secondRoll, thirdRoll };
+            var rolls = new[] {firstRoll, secondRoll, thirdRoll};
 
             //assert
             Assert.Throws<InvalidFrameException>(() => _standardFrame.SaveRolls(rolls));
-
         }
 
         [Test]
@@ -59,7 +54,6 @@ namespace BowlingChallengeTests
 
             //assert
             Assert.Throws<InvalidFrameException>(() => _standardFrame.SaveRolls(rolls));
-
         }
 
         [Test]
@@ -70,7 +64,7 @@ namespace BowlingChallengeTests
             var secondRoll = 8;
             var expectedSum = firstRoll + secondRoll;
 
-            var rolls = new int[] { firstRoll, secondRoll };
+            var rolls = new[] {firstRoll, secondRoll};
 
             //act
             _standardFrame.SaveRolls(rolls);
@@ -85,13 +79,13 @@ namespace BowlingChallengeTests
             //arrange
             var firstRoll = 1;
             var secondRoll = 9;
-            var rolls = new int[] { firstRoll, secondRoll };
+            var rolls = new[] {firstRoll, secondRoll};
 
             //act
             _standardFrame.SaveRolls(rolls);
 
             //assert
-            Assert.AreEqual(_standardFrame.FrameTotal, (int)BowlingMarks.Spare);
+            Assert.AreEqual(_standardFrame.FrameTotal, (int) BowlingMarks.Spare);
         }
 
         [Test]
@@ -100,13 +94,14 @@ namespace BowlingChallengeTests
         {
             var firstRoll = 10;
             var secondRoll = 0;
-            var rolls = new int[] { firstRoll, secondRoll };
+            var rolls = new[] {firstRoll, secondRoll};
 
             //act
-            _standardFrame.SaveRolls(rolls); ;
+            _standardFrame.SaveRolls(rolls);
+            ;
 
             //assert
-            Assert.AreEqual(_standardFrame.FrameTotal, (int)BowlingMarks.Strike);
+            Assert.AreEqual(_standardFrame.FrameTotal, (int) BowlingMarks.Strike);
         }
 
         [Test]
@@ -115,11 +110,10 @@ namespace BowlingChallengeTests
         {
             var firstRoll = 2;
             var secondRoll = 9;
-            var rolls = new int[] { firstRoll, secondRoll };
+            var rolls = new[] {firstRoll, secondRoll};
 
             //assert
             Assert.Throws<InvalidFrameException>(() => _standardFrame.SaveRolls(rolls));
-
         }
 
         [Test]
@@ -136,6 +130,7 @@ namespace BowlingChallengeTests
             Assert.AreEqual(newFrameValue, _standardFrame.FrameTotal);
             Assert.IsTrue(_standardFrame.IsBackFilled);
         }
+
         #endregion
 
         #region FinalFrame Tests
@@ -147,7 +142,7 @@ namespace BowlingChallengeTests
             var firstRoll = 1;
             var secondRoll = 9;
             var thirdRoll = 3;
-            var rolls = new int[] { firstRoll, secondRoll, thirdRoll };
+            var rolls = new[] {firstRoll, secondRoll, thirdRoll};
 
             //act
             _finalFrame.SaveRolls(rolls);
@@ -156,7 +151,6 @@ namespace BowlingChallengeTests
             Assert.AreEqual(firstRoll, _finalFrame.Rolls[0]);
             Assert.AreEqual(secondRoll, _finalFrame.Rolls[1]);
             Assert.AreEqual(thirdRoll, _finalFrame.Rolls[2]);
-
         }
 
         [Test]
@@ -168,11 +162,10 @@ namespace BowlingChallengeTests
             var thirdRoll = 3;
             var fourthRoll = 4;
 
-            var rolls = new int[] { firstRoll, secondRoll, thirdRoll, fourthRoll };
+            var rolls = new[] {firstRoll, secondRoll, thirdRoll, fourthRoll};
 
             //assert
             Assert.Throws<InvalidFrameException>(() => _finalFrame.SaveRolls(rolls));
-
         }
 
         [Test]
@@ -183,7 +176,6 @@ namespace BowlingChallengeTests
 
             //assert
             Assert.Throws<InvalidFrameException>(() => _finalFrame.SaveRolls(rolls));
-
         }
 
         [Test]
@@ -194,7 +186,7 @@ namespace BowlingChallengeTests
             var secondRoll = 8;
             var thirdRoll = 2;
             var expectedSum = firstRoll + secondRoll + thirdRoll;
-            var rolls = new int[] { firstRoll, secondRoll, thirdRoll };
+            var rolls = new[] {firstRoll, secondRoll, thirdRoll};
 
             //act
             _finalFrame.SaveRolls(rolls);
@@ -211,7 +203,7 @@ namespace BowlingChallengeTests
             var secondRoll = 8;
             var thirdRoll = 2;
             var expectedSum = firstRoll + secondRoll + thirdRoll;
-            var rolls = new int[] { firstRoll, secondRoll, thirdRoll };
+            var rolls = new[] {firstRoll, secondRoll, thirdRoll};
 
             //act
             _finalFrame.SaveRolls(rolls);
@@ -227,7 +219,7 @@ namespace BowlingChallengeTests
             var firstRoll = 2;
             var secondRoll = 6;
             var expectedSum = firstRoll + secondRoll;
-            var rolls = new int[] { firstRoll, secondRoll };
+            var rolls = new[] {firstRoll, secondRoll};
 
             //act
             _finalFrame.SaveRolls(rolls);
@@ -244,11 +236,10 @@ namespace BowlingChallengeTests
             var secondRoll = 3;
             var thirdRoll = 2;
 
-            var rolls = new int[] { firstRoll, secondRoll, thirdRoll };
+            var rolls = new[] {firstRoll, secondRoll, thirdRoll};
 
             //assert
             Assert.Throws<InvalidFrameException>(() => _finalFrame.SaveRolls(rolls));
-
         }
 
         [Test]
@@ -266,10 +257,6 @@ namespace BowlingChallengeTests
             Assert.IsTrue(_finalFrame.IsBackFilled);
         }
 
-
-
         #endregion
-
-
     }
 }

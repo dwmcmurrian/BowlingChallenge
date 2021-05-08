@@ -2,10 +2,9 @@
 {
     public class FinalFrame : IFrame
     {
-
-        public int[] Rolls { get; private set; }
-        public bool ExtaRoll { get; private set; }
+        public bool HasExtraRoll { get; private set; }
         public bool IsBackFilled { get; private set; }
+        public int[] Rolls { get; private set; }
         public int FrameTotal { get; private set; }
 
         public void SaveRolls(int[] rolls)
@@ -18,31 +17,22 @@
             SetFrameTotal();
         }
 
-        private void SetFrameTotal()
-        {
-         
-            var sum = 0;
-            if (Rolls[0] + Rolls[1] >= (int)BowlingMarks.Strike)
-            {
-                ExtaRoll = true;
-
-            }else if (Rolls.Length == 3)
-            {
-                throw new InvalidFrameException();
-            }
-
-            foreach (var roll in Rolls)
-            {
-                sum += roll;
-            }
-            
-            FrameTotal = sum;
-        }
-
         public void UpdateFrameTotal(int frameTotal)
         {
             IsBackFilled = true;
             FrameTotal = frameTotal;
+        }
+
+        private void SetFrameTotal()
+        {
+            var sum = 0;
+            if (Rolls[0] + Rolls[1] >= (int) BowlingMarks.Strike)
+                HasExtraRoll = true;
+            else if (Rolls.Length == 3) throw new InvalidFrameException();
+
+            foreach (var roll in Rolls) sum += roll;
+
+            FrameTotal = sum;
         }
     }
 }

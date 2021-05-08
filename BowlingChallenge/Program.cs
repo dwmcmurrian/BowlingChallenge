@@ -1,36 +1,73 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BowlingChallenge
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine(@"
+ ____                                                           
+/\  _`\                                                         
+\ \ \/\ \  __  __  __     __     __  __    ___      __    ____  
+ \ \ \ \ \/\ \/\ \/\ \  /'__`\  /\ \/\ \ /' _ `\  /'__`\ /',__\ 
+  \ \ \_\ \ \ \_/ \_/ \/\ \L\.\_\ \ \_\ \/\ \/\ \/\  __//\__, `\
+   \ \____/\ \___x___/'\ \__/.\_\\/`____ \ \_\ \_\ \____\/\____/
+    \/___/  \/__//__/   \/__/\/_/ `/___/> \/_/\/_/\/____/\/___/ 
+                                     /\___/                     
+                                     \/__/                      
+ ____                         ___                                                 __     
+/\  _`\                      /\_ \                                               /\ \    
+\ \ \L\ \    ___   __  __  __\//\ \      __     _ __    __      ___ ___      __  \ \ \   
+ \ \  _ <'  / __`\/\ \/\ \/\ \ \ \ \   /'__`\  /\`'__\/'__`\  /' __` __`\  /'__`\ \ \ \  
+  \ \ \L\ \/\ \L\ \ \ \_/ \_/ \ \_\ \_/\ \L\.\_\ \ \//\ \L\.\_/\ \/\ \/\ \/\ \L\.\_\ \_\ 
+   \ \____/\ \____/\ \___x___/' /\____\ \__/.\_\\ \_\\ \__/.\_\ \_\ \_\ \_\ \__/.\_\\/\_\
+    \/___/  \/___/  \/__//__/   \/____/\/__/\/_/ \/_/ \/__/\/_/\/_/\/_/\/_/\/__/\/_/ \/_/
+                                                                                         
+");
 
-            int[][] jaggedArray2 = new int[][]
-            {
-                new int[] { 0, 2,},
-                new int[] { 5, 4 },
-                new int[] { 3, 7,},
-                new int[] { 7, 1 },
-                new int[] {10, 0},
-                new int[] { 10, 0 },
-                new int[] { 3, 2,},
-                new int[] { 2, 4 },
-             };
+            Console.WriteLine("\n\nHello, Would you LIKE to play A game! o_O\n\n");
 
+            var userInput = "";
             var scoreCard = new ScoreCard();
-            for( var i = 0; i< jaggedArray2.Length; i++)
+            var maxValue = 10;
+            var maxFrames = 10;
+
+            var list = new List<List<int>>();
+            for (var i = 0; i < maxFrames; i++)
             {
-                var array = jaggedArray2[i];
+                var frameSum = 10;
+                var rollCount = 1;
+                var currentRolls = new List<int>();
+                var maxRolls = 3;
 
-                Console.WriteLine($"roll 1: {array[0]}\n roll 2: {array[1]}\n");
-                scoreCard.AddFrame(array);
-                Console.WriteLine($"FrameTotal: {scoreCard.Scores[i]}\n");
+                do
+                {
+                    Console.WriteLine($"\nFrame: {i + 1} - Roll: {rollCount}:");
+                    Console.WriteLine($"\nPlease enter a value: 0 - {frameSum} (you can also enter 'stop' to exit: ");
+                    userInput = Console.ReadLine(); //need to add roll 1
+                    var numericalEntry = int.TryParse(userInput, out var userInt);
+                    if (numericalEntry && userInt <= frameSum)
+                    {
+                        currentRolls.Add(userInt);
+                        frameSum -= userInt;
 
+                        if (i == 9 && rollCount <= 2 && frameSum == 0) maxRolls++;
+                        rollCount++;
+                    }
+                } while (rollCount < maxRolls && userInput.ToLower() != "stop");
+
+                list.Add(currentRolls);
             }
-           
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                var rolls = string.Join(",", list[i]);
+                Console.WriteLine($"\nRolls: {rolls}");
+                scoreCard.AddFrame(list[i].ToArray());
+                Console.WriteLine($"FrameTotal: {scoreCard.Scores[i]}\n");
+            }
         }
     }
 }
