@@ -1,6 +1,5 @@
 ﻿using BowlingChallenge;
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Linq;
 
 
@@ -23,20 +22,18 @@ namespace BowlingChallengeTests
             //arrange
             var firstRoll = 4;
             var secondRoll = 5;
-            var currentScore = 5;
             var expectedFrameSum = firstRoll + secondRoll;
-            var currentFameSum = firstRoll + secondRoll + currentScore;
+            var currentFameSum = firstRoll + secondRoll;
 
             var frameScore = new int[] { firstRoll, secondRoll };
-            var scoreCard = new ScoreCard(currentScore);
 
             //act
-            scoreCard.AddFrame(frameScore);
+            _scoreCard.AddFrame(frameScore);
 
             //assert
-            Assert.AreEqual(1, scoreCard.CurrentFrame);
-            Assert.AreEqual(expectedFrameSum, scoreCard.Frames.FirstOrDefault());
-            Assert.AreEqual(currentFameSum, scoreCard.CurrentScore);
+            Assert.AreEqual(1, _scoreCard.CurrentFrameCount);
+            Assert.AreEqual(expectedFrameSum, _scoreCard.Frames.FirstOrDefault().Value.FrameTotal);
+            Assert.AreEqual(currentFameSum, _scoreCard.CurrentScore);
         }
 
 
@@ -44,23 +41,19 @@ namespace BowlingChallengeTests
         public void AddFrame_AddingSpareFrameAfterStrike_ShouldSetPreviousFrameTo20()
         {
             //arrange
-            var previousFrameRolls = new int[] { 10, 0 };
-            var nextFrameRolls = new int[] { 2, 5 };
+            var previousFrameRolls = new int[] { (int)BowlingMarks.Strike, 0 };
+            var nextFrameRolls = new int[] { 2, 8 };
             var expectedFrameCount = 2;
-            var expectedPreviousFrameSum = 20;
-            var currentExpectedSum = 20;
-            var scoreCard = new ScoreCard(currentExpectedSum);
 
             //act
-            scoreCard.AddFrame(previousFrameRolls);
-            scoreCard.AddFrame(nextFrameRolls);
-
+            _scoreCard.AddFrame(previousFrameRolls);
+            _scoreCard.AddFrame(nextFrameRolls);
 
             //assert
-            Assert.AreEqual(expectedFrameCount, scoreCard.CurrentFrame);
-            Assert.AreEqual(expectedPreviousFrameSum, scoreCard.Frames[0].GetFrameTotal());
-            Assert.AreEqual((int)BowlingMarks.Spare, scoreCard.Frames[1].GetFrameTotal());
-            Assert.AreEqual(currentExpectedSum, scoreCard.CurrentScore);
+            Assert.AreEqual(expectedFrameCount, _scoreCard.CurrentFrameCount);
+            Assert.AreEqual((int)BowlingMarks.OppositeMarks, _scoreCard.Frames[0].FrameTotal);
+            Assert.AreEqual((int)BowlingMarks.Spare, _scoreCard.Frames[1].FrameTotal);
+            Assert.AreEqual((int)BowlingMarks.OppositeMarks, _scoreCard.CurrentScore);
         }
 
         [Test]
@@ -68,10 +61,8 @@ namespace BowlingChallengeTests
         {
             //arrange
             var previousFrameRolls = new int[] { 1, 9 };
-            var nextFrameRolls = new int[] { 10, 0 };
+            var nextFrameRolls = new int[] { (int)BowlingMarks.Strike, 0 };
             var expectedFrameCount = 2;
-            var expectedPreviousFrameSum = 20;
-            var currentExpectedSum = 20;
 
             //act
             _scoreCard.AddFrame(previousFrameRolls);
@@ -79,10 +70,10 @@ namespace BowlingChallengeTests
 
 
             //assert
-            Assert.AreEqual(expectedFrameCount, _scoreCard.CurrentFrame);
-            Assert.AreEqual(expectedPreviousFrameSum, _scoreCard.Frames[0].GetFrameTotal());
-            Assert.AreEqual((int)BowlingMarks.Strike, _scoreCard.Frames[1].GetFrameTotal());
-            Assert.AreEqual(currentExpectedSum, _scoreCard.CurrentScore);
+            Assert.AreEqual(expectedFrameCount, _scoreCard.CurrentFrameCount);
+            Assert.AreEqual((int)BowlingMarks.OppositeMarks, _scoreCard.Frames[0].FrameTotal);
+            Assert.AreEqual((int)BowlingMarks.Strike, _scoreCard.Frames[1].FrameTotal);
+            Assert.AreEqual((int)BowlingMarks.OppositeMarks, _scoreCard.CurrentScore);
         }
 
         [Test]
@@ -94,7 +85,7 @@ namespace BowlingChallengeTests
             var expectedFrameCount = 2;
             var expectedPreviousFrameSum = 10 + nextFrameRolls[0];
             var expectedCurrentFrameSum = nextFrameRolls[0] + nextFrameRolls[1];
-            var currentExpectedSum = expectedPreviousFrameSum + nextFrameRolls[1];
+            var currentExpectedSum = expectedPreviousFrameSum + expectedCurrentFrameSum;
 
             //act
             _scoreCard.AddFrame(previousFrameRolls);
@@ -102,9 +93,9 @@ namespace BowlingChallengeTests
 
 
             //assert
-            Assert.AreEqual(expectedFrameCount, _scoreCard.CurrentFrame);
-            Assert.AreEqual(expectedPreviousFrameSum, _scoreCard.Frames[0].GetFrameTotal());
-            Assert.AreEqual(expectedCurrentFrameSum, _scoreCard.Frames[1].GetFrameTotal());
+            Assert.AreEqual(expectedFrameCount, _scoreCard.CurrentFrameCount);
+            Assert.AreEqual(expectedPreviousFrameSum, _scoreCard.Frames[0].FrameTotal);
+            Assert.AreEqual(expectedCurrentFrameSum, _scoreCard.Frames[1].FrameTotal);
             Assert.AreEqual(currentExpectedSum, _scoreCard.CurrentScore);
         }
 
@@ -116,17 +107,17 @@ namespace BowlingChallengeTests
             var nextFrameRolls = new int[] { 4, 6 };
             var expectedFrameCount = 2;
             var expectedPreviousFrameSum = 10 + nextFrameRolls[0];
-            var currentExpectedSum = expectedPreviousFrameSum ;
-
+            var currentExpectedSum = expectedPreviousFrameSum;
             //act
             _scoreCard.AddFrame(previousFrameRolls);
             _scoreCard.AddFrame(nextFrameRolls);
 
 
             //assert
-            Assert.AreEqual(expectedFrameCount, _scoreCard.CurrentFrame);
-            Assert.AreEqual(expectedPreviousFrameSum, _scoreCard.Frames[0].GetFrameTotal());
-            Assert.AreEqual((int)BowlingMarks.Spare, _scoreCard.Frames[1].GetFrameTotal());
+            //assert
+            Assert.AreEqual(expectedFrameCount, _scoreCard.CurrentFrameCount);
+            Assert.AreEqual(expectedPreviousFrameSum, _scoreCard.Frames[0].FrameTotal);
+            Assert.AreEqual((int)BowlingMarks.Spare, _scoreCard.Frames[1].FrameTotal);
             Assert.AreEqual(currentExpectedSum, _scoreCard.CurrentScore);
         }
 
@@ -146,55 +137,39 @@ namespace BowlingChallengeTests
             _scoreCard.AddFrame(nextFrameRolls);
 
             //assert
-            Assert.AreEqual(expectedFrameCount, _scoreCard.CurrentFrame);
-            Assert.AreEqual(expectedPreviousFrameSum, _scoreCard.Frames[0].GetFrameTotal());
-            Assert.AreEqual(expectedCurrentFrameSum, _scoreCard.Frames[1].GetFrameTotal());
+            Assert.AreEqual(expectedFrameCount, _scoreCard.CurrentFrameCount);
+            Assert.AreEqual(expectedPreviousFrameSum, _scoreCard.Frames[0].FrameTotal);
+            Assert.AreEqual(expectedCurrentFrameSum, _scoreCard.Frames[1].FrameTotal);
             Assert.AreEqual(currentExpectedSum, _scoreCard.CurrentScore);
         }
 
         [Test]
-        public void AddFrame_AddingMultipleStrikesAfterStrike_ShouldSetPreviousFrameToThirty()
+        public void AddFrame_AddingTurekeyFollowedByASpare_ShouldScaleStreakScoreForTheStrikeFields()
         {
             //arrange
             var firstFrameRolls = new int[] { (int)BowlingMarks.Strike, 0 };
             var secondFrameRolls = new int[] { (int)BowlingMarks.Strike, 0 };
             var thirdFrameRolls = new int[] { (int)BowlingMarks.Strike, 0 };
-            var expectedFrameCount = 3;
+            var fourthFrameRolls = new int[] { 2, 8 };
+            var expectedFrameCount = 4;
+            var expectedFrame2Sum = (int)BowlingMarks.OppositeMarks + fourthFrameRolls[0];
+            var expectedFrame3Sum = (int)BowlingMarks.OppositeMarks;
+            var expectedTotal = (int)BowlingMarks.Turkey + expectedFrame2Sum + expectedFrame3Sum;
 
             //act
             _scoreCard.AddFrame(firstFrameRolls);
             _scoreCard.AddFrame(secondFrameRolls);
             _scoreCard.AddFrame(thirdFrameRolls);
+            _scoreCard.AddFrame(fourthFrameRolls);
 
             //assert
-            Assert.AreEqual(expectedFrameCount, _scoreCard.CurrentFrame);
-            Assert.AreEqual((int)BowlingMarks.Turkey, _scoreCard.Frames[0].GetFrameTotal());
-            Assert.AreEqual((int)BowlingMarks.Strike, _scoreCard.Frames[1].GetFrameTotal());
-            Assert.AreEqual((int)BowlingMarks.Strike, _scoreCard.Frames[2].GetFrameTotal());
-            Assert.AreEqual((int)BowlingMarks.Turkey, _scoreCard.CurrentScore);
+            Assert.AreEqual(expectedFrameCount, _scoreCard.CurrentFrameCount);
+            Assert.AreEqual((int)BowlingMarks.Turkey, _scoreCard.Frames[0].FrameTotal);
+            Assert.AreEqual(expectedFrame2Sum, _scoreCard.Frames[1].FrameTotal);
+            Assert.AreEqual(expectedFrame3Sum, _scoreCard.Frames[2].FrameTotal);
+            Assert.AreEqual((int)BowlingMarks.Spare, _scoreCard.Frames[3].FrameTotal);
+            Assert.AreEqual(expectedTotal, _scoreCard.CurrentScore);
         }
-
-        //[Test]
-        //public void GetCurrentTotal_SingleFrameRoll_ShouldReturnUpdatedValue()
-        //{
-        //    //arrange
-        //    var firstRoll = 4;
-        //    var secondRoll = 5;
-        //    var currentScore = 5;
-        //    var expectedFrameSum = firstRoll + secondRoll;
-        //    var currentExpectedSum = firstRoll + secondRoll + currentScore;
-
-        //    var frameScore = new int[] { firstRoll, secondRoll };
-        //    var scoreCard = new ScoreCard(currentScore);
-
-        //    //act
-        //    scoreCard.AddFrame(frameScore);
-        //    var currentSum = scoreCard.GetCurrentTotal();
-
-
-        //    //assert
-        //    Assert.AreEqual(currentFameSum, currentScore);
-        //}
     }
 }
 

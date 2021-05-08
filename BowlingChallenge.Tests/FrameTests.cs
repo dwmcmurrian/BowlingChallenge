@@ -20,7 +20,7 @@ namespace BowlingChallengeTests
         }
 
         #region StandardFrame Tests
-       
+
         [Test]
         public void SaveRolls_ValidStandardRolls_ShouldSetRollsToMatch()
         {
@@ -123,7 +123,7 @@ namespace BowlingChallengeTests
         }
 
         [Test]
-        public void UpdateFrameTotal_ValidStandardTotal_ShouldUpdateFrameTotal()
+        public void UpdateFrameTotal_ValidStandardTotal_ShouldUpdateFrameTotalAndMarkAsBackFilled()
 
         {
             //arrange
@@ -134,12 +134,13 @@ namespace BowlingChallengeTests
 
             //assert
             Assert.AreEqual(newFrameValue, _standardFrame.FrameTotal);
+            Assert.IsTrue(_standardFrame.IsBackFilled);
         }
         #endregion
 
         #region FinalFrame Tests
 
-                [Test]
+        [Test]
         public void SaveRolls_ValidNumberOfFinalRolls_ShouldSaveMathcingValues()
         {
             //arrange
@@ -201,7 +202,7 @@ namespace BowlingChallengeTests
             //assert
             Assert.AreEqual(expectedSum, _finalFrame.FrameTotal);
         }
-         
+
         [Test]
         public void GetFrameTotal_FinalFrameSpareRolledInFirstTwoFrames_ShouldReturnSumOfThreeRolls()
         {
@@ -251,17 +252,18 @@ namespace BowlingChallengeTests
         }
 
         [Test]
-        public void UpdateFrameTotal_ValidFinalTotal_ShouldUpdateFrameTotal()
+        public void UpdateFrameTotal_ValidFinalTotal_ShouldUpdateFrameTotalAndMarkAsBackFilled()
 
         {
             //arrange
             var newFrameValue = 5;
 
             //act
-            _standardFrame.UpdateFrameTotal(newFrameValue);
+            _finalFrame.UpdateFrameTotal(newFrameValue);
 
             //assert
-            Assert.AreEqual(newFrameValue, _standardFrame.FrameTotal);
+            Assert.AreEqual(newFrameValue, _finalFrame.FrameTotal);
+            Assert.IsTrue(_finalFrame.IsBackFilled);
         }
 
 

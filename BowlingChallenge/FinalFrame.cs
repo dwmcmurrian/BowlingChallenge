@@ -5,6 +5,7 @@
 
         public int[] Rolls { get; private set; }
         public bool ExtaRoll { get; private set; }
+        public bool IsBackFilled { get; private set; }
         public int FrameTotal { get; private set; }
 
         public void SaveRolls(int[] rolls)
@@ -40,6 +41,7 @@
 
         public void UpdateFrameTotal(int frameTotal)
         {
+            IsBackFilled = true;
             FrameTotal = frameTotal;
         }
     }

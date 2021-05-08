@@ -8,6 +8,7 @@ namespace BowlingChallenge
     {
         public int[] Rolls { get; private set; }
         public int FrameTotal { get; private set; }
+        public bool IsBackFilled { get; private set; }
 
         public void SaveRolls(int[] rolls)
         {
@@ -37,7 +38,8 @@ namespace BowlingChallenge
 
         public void UpdateFrameTotal(int frameTotal)
         {
-               FrameTotal = frameTotal;
+            IsBackFilled = true;
+            FrameTotal = frameTotal;
         }
     }
 }
