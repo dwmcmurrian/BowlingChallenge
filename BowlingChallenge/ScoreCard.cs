@@ -63,30 +63,37 @@ namespace BowlingChallenge
             var ball2 = currentFrame.Rolls[1];
             var lastFrame = Frames[CurrentFrameCount - 1];
             var secondToLastFrame = Frames[CurrentFrameCount - 2];
-            var numberOfStrikes = Strikes.Count;
 
             if (secondToLastFrame.IsStrike && lastFrame.IsStrike)
             {
-                var newSecondToLastTotal = (int) BowlingMarks.Strike + (int) BowlingMarks.Strike + ball1;
-                var newLastTotal = (int) BowlingMarks.Strike + ball1 + ball2;
-                Frames[CurrentFrameCount - 2].UpdateFrameTotal(newSecondToLastTotal);
-                Frames[CurrentFrameCount - 1].UpdateFrameTotal(newLastTotal);
+                TallySecondToLastFramePostStrike(ball1);
+                TallyLastFramePostStrike(ball1, ball2);
             }
             else if (lastFrame.IsStrike)
             {
-                var newLastTotal = (int) BowlingMarks.Strike + ball1 + ball2;
-                Frames[CurrentFrameCount - 1].UpdateFrameTotal(newLastTotal);
+                TallyLastFramePostStrike(ball1, ball2);
             }
             else if (lastFrame.IsSpare)
             {
-                var newLastTotal = (int) BowlingMarks.Strike + ball1;
-                Frames[CurrentFrameCount - 1].UpdateFrameTotal(newLastTotal);
+                TallyLastFramePostStrike(ball1);
             }
 
             Frames.Add(CurrentFrameCount, currentFrame);
             Scores.Add(CurrentFrameCount, currentFrame.FrameTotal);
             Strikes.Clear();
             UpdateScore(currentFrame);
+        }
+
+        private void TallySecondToLastFramePostStrike(int ball1)
+        {
+            var newSecondToLastTotal = (int) BowlingMarks.Strike + (int) BowlingMarks.Strike + ball1;
+            Frames[CurrentFrameCount - 2].UpdateFrameTotal(newSecondToLastTotal);
+        }
+
+        private void TallyLastFramePostStrike(int ball1 = 0, int ball2 = 0)
+        {
+            var newLastTotal = (int) BowlingMarks.Strike + ball1 + ball2;
+            Frames[CurrentFrameCount - 1].UpdateFrameTotal(newLastTotal);
         }
 
         private void UpdateScore(IFrame currentFrame)
