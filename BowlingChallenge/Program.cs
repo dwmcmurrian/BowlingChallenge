@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BowlingChallenge
 {
@@ -26,41 +27,33 @@ namespace BowlingChallenge
     \/___/  \/___/  \/__//__/   \/____/\/__/\/_/ \/_/ \/__/\/_/\/_/\/_/\/_/\/__/\/_/ \/_/
                                                                                          
 ");
-
-            Console.WriteLine("\n\nHello, Would you LIKE to play A game! o_O\n\n");
-
-            var userInput = "";
-            var scoreCard = new ScoreCard();
-            var maxValue = 10;
-            var maxFrames = 10;
-
-            var list = new List<List<int>>();
-            for (var i = 0; i < maxFrames; i++)
+            do
             {
-                var frameSum = 10;
-                var rollCount = 1;
-                var currentRolls = new List<int>();
-                var maxRolls = 3;
+                Console.WriteLine("\n\nHello, Would you LIKE to play A game! o_O\n\n");
 
-                do
+                var scoreCard = new ScoreCard();
+                var list = new List<List<int>>();
+                try
                 {
-                    Console.WriteLine($"\nFrame: {i + 1} - Roll: {rollCount}:");
-                    Console.WriteLine($"\nPlease enter a value: 0 - {frameSum} (you can also enter 'stop' to exit: ");
-                    userInput = Console.ReadLine(); //need to add roll 1
-                    var numericalEntry = int.TryParse(userInput, out var userInt);
-                    if (numericalEntry && userInt <= frameSum)
-                    {
-                        currentRolls.Add(userInt);
-                        frameSum -= userInt;
+                    CollectUserFrames(list);
+                    TallyScoreCard(list, scoreCard);
+                }
+                catch (InvalidFrameException)
+                {
+                    Console.WriteLine("An invalid frame was entered");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unknown error: {ex.InnerException}");
+                }
 
-                        if (i == 9 && rollCount <= 2 && frameSum == 0) maxRolls++;
-                        rollCount++;
-                    }
-                } while (rollCount < maxRolls && userInput.ToLower() != "stop");
+                Console.WriteLine("Hit any key to run again");
+                Console.ReadKey();
+            } while (true);
+        }
 
-                list.Add(currentRolls);
-            }
-
+        private static void TallyScoreCard(List<List<int>> list, ScoreCard scoreCard)
+        {
             for (var i = 0; i < list.Count; i++)
             {
                 var rolls = string.Join(",", list[i]);
@@ -68,6 +61,82 @@ namespace BowlingChallenge
                 scoreCard.AddFrame(list[i].ToArray());
                 Console.WriteLine($"FrameTotal: {scoreCard.Scores[i]}\n");
             }
+        }
+
+        private static void CollectUserFrames(List<List<int>> list)
+        {
+            const int maxFrames = 10;
+
+            for (var i = 0; i < maxFrames; i++)
+            {
+                var rollCount = 1;
+                var currentRolls = new List<int>();
+                var maxRolls = 3;
+                var enableExtraFrame = false;
+
+                var userInput = "";
+                do
+                {
+                    if (CollectUserStandardFrames(i, currentRolls, ref rollCount, out userInput, ref enableExtraFrame))
+                        break;
+                } while (userInput != null && rollCount < maxRolls && userInput.ToLower() != "stop");
+
+                if (userInput != null && userInput.ToLower() == "stop") break;
+
+                if (enableExtraFrame)
+                {
+                    if (CollectUserExtraFrame(currentRolls)) break;
+                }
+                else
+                {
+                    if (currentRolls.Count < 2)
+                        for (var c = currentRolls.Count - 1; c < 2; c++)
+                            currentRolls.Add(0);
+                }
+
+                list.Add(currentRolls);
+            }
+        }
+
+        private static bool CollectUserExtraFrame(List<int> currentRolls)
+        {
+            string userInput;
+            Console.WriteLine(
+                "\nPlease enter a bonus Frame value between  0 - 10, or press enter to " +
+                "continue.: ");
+            userInput = Console.ReadLine();
+            var numericalEntry = int.TryParse(userInput, out var userInt);
+            if (userInput != null && userInput.ToLower() == "stop") return true;
+
+            // if (!numericalEntry || userInt > 10) continue;
+
+            currentRolls.Add(userInt);
+
+            if (currentRolls.Count < 3)
+                for (var c = currentRolls.Count - 1; c < 3; c++)
+                    currentRolls.Add(0);
+            return false;
+        }
+
+        private static bool CollectUserStandardFrames(int i, List<int> currentRolls, ref int rollCount,
+            out string userInput,
+            ref bool enableExtraFrame)
+        {
+            Console.WriteLine($"\nFrame: {i + 1} - Roll: {rollCount}:");
+            Console.WriteLine("\nPlease enter a value: 0 - 10. (you can also enter 'stop' to exit): ");
+            userInput = Console.ReadLine(); //need to add roll 1
+            var numericalEntry = int.TryParse(userInput, out var userInt);
+            if (userInput != null && userInput.ToLower() == "stop") return true;
+
+            if (!numericalEntry || userInt > 10) return false;
+
+            currentRolls.Add(userInt);
+
+            if (i == 9)
+                if (currentRolls.Sum() >= 10) //9th frame, first roll and strike
+                    enableExtraFrame = true;
+            rollCount++;
+            return false;
         }
     }
 }
