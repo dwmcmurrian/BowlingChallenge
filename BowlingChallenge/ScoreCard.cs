@@ -116,57 +116,68 @@ namespace BowlingChallenge
             var numberOfStrikes = Strikes.Count();
 
             if (numberOfStrikes > 0)
+                ProcessStrikeStreak(currentFrame, numberOfStrikes);
+            else
+                ProcessNonStreakFrames(currentFrame);
+        }
+
+        private void ProcessNonStreakFrames(IFrame currentFrame)
+        {
+            if (currentFrame.IsStrike)
             {
-                var firstStrikeFrame = Strikes[0];
+                Strikes.Add(CurrentFrameCount);
 
-                var secondStrikeFrame = 0;
-                if (currentFrame.FrameTotal != (int) BowlingMarks.Spare)
+                if (Frames.Count <= 1) return;
+
+                if (Frames[PreviousFrameCount].IsSpare)
+                    Frames[PreviousFrameCount].UpdateFrameTotal((int) BowlingMarks.OppositeMarks);
+            }
+            else if (Frames.Count > 1)
+            {
+                if (Frames[PreviousFrameCount].IsSpare)
+                    Frames[PreviousFrameCount]
+                        .UpdateFrameTotal((int) BowlingMarks.Strike + currentFrame.Rolls[0]);
+                if (Frames[PreviousFrameCount].IsStrike)
+                    Frames[PreviousFrameCount]
+                        .UpdateFrameTotal((int) BowlingMarks.Strike + currentFrame.FrameTotal);
+            }
+        }
+
+        private void ProcessStrikeStreak(IFrame currentFrame, int numberOfStrikes)
+        {
+            var firstStrikeFrame = Strikes[0];
+
+            var secondStrikeFrame = 0;
+            if (currentFrame.FrameTotal != (int) BowlingMarks.Spare)
+            {
+                if (currentFrame.FrameTotal == (int) BowlingMarks.Strike)
                 {
-                    if (currentFrame.FrameTotal == (int) BowlingMarks.Strike)
+                    if (numberOfStrikes < 2)
                     {
-                        if (numberOfStrikes < 2)
-                        {
-                            Strikes.Add(CurrentFrameCount);
-                        }
-                        else if (numberOfStrikes == 2)
-                        {
-                            Frames[firstStrikeFrame].UpdateFrameTotal((int) BowlingMarks.Turkey);
-                            Turkey = true;
-                            Strikes = Strikes.Skip(1).ToList();
-                            Strikes.Add(CurrentFrameCount);
-                        }
+                        Strikes.Add(CurrentFrameCount);
                     }
-                    else
+                    else if (numberOfStrikes == 2)
                     {
-                        if (numberOfStrikes == 1)
-                        {
-                            Frames[firstStrikeFrame]
-                                .UpdateFrameTotal((int) BowlingMarks.Strike + currentFrame.FrameTotal);
-                        }
-                        else
-                        {
-                            secondStrikeFrame = Strikes[1];
-                            Frames[firstStrikeFrame]
-                                .UpdateFrameTotal((int) BowlingMarks.OppositeMarks + currentFrame.Rolls[0]);
-                            Frames[secondStrikeFrame]
-                                .UpdateFrameTotal((int) BowlingMarks.Strike + currentFrame.FrameTotal);
-                        }
-
-                        Strikes.Clear();
+                        Frames[firstStrikeFrame].UpdateFrameTotal((int) BowlingMarks.Turkey);
+                        Turkey = true;
+                        Strikes = Strikes.Skip(1).ToList();
+                        Strikes.Add(CurrentFrameCount);
                     }
                 }
                 else
                 {
                     if (numberOfStrikes == 1)
                     {
-                        Frames[firstStrikeFrame].UpdateFrameTotal((int) BowlingMarks.OppositeMarks);
+                        Frames[firstStrikeFrame]
+                            .UpdateFrameTotal((int) BowlingMarks.Strike + currentFrame.FrameTotal);
                     }
                     else
                     {
                         secondStrikeFrame = Strikes[1];
                         Frames[firstStrikeFrame]
                             .UpdateFrameTotal((int) BowlingMarks.OppositeMarks + currentFrame.Rolls[0]);
-                        Frames[secondStrikeFrame].UpdateFrameTotal((int) BowlingMarks.OppositeMarks);
+                        Frames[secondStrikeFrame]
+                            .UpdateFrameTotal((int) BowlingMarks.Strike + currentFrame.FrameTotal);
                     }
 
                     Strikes.Clear();
@@ -174,24 +185,19 @@ namespace BowlingChallenge
             }
             else
             {
-                if (currentFrame.IsStrike)
+                if (numberOfStrikes == 1)
                 {
-                    Strikes.Add(CurrentFrameCount);
-
-                    if (Frames.Count <= 1) return;
-
-                    if (Frames[PreviousFrameCount].IsSpare)
-                        Frames[PreviousFrameCount].UpdateFrameTotal((int) BowlingMarks.OppositeMarks);
+                    Frames[firstStrikeFrame].UpdateFrameTotal((int) BowlingMarks.OppositeMarks);
                 }
-                else if (Frames.Count > 1)
+                else
                 {
-                    if (Frames[PreviousFrameCount].IsSpare)
-                        Frames[PreviousFrameCount]
-                            .UpdateFrameTotal((int) BowlingMarks.Strike + currentFrame.Rolls[0]);
-                    if (Frames[PreviousFrameCount].IsStrike)
-                        Frames[PreviousFrameCount]
-                            .UpdateFrameTotal((int) BowlingMarks.Strike + currentFrame.FrameTotal);
+                    secondStrikeFrame = Strikes[1];
+                    Frames[firstStrikeFrame]
+                        .UpdateFrameTotal((int) BowlingMarks.OppositeMarks + currentFrame.Rolls[0]);
+                    Frames[secondStrikeFrame].UpdateFrameTotal((int) BowlingMarks.OppositeMarks);
                 }
+
+                Strikes.Clear();
             }
         }
     }
